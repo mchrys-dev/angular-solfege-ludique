@@ -13,10 +13,7 @@ export class StorageService {
 
   getObjectFromLocalStorage(key: string) {
     const keyString = localStorage.getItem(key) as string;
-    let objectFromStorage = {
-      id: 0,
-      description: ''
-    };
+    let objectFromStorage: any = {};
     if(keyString !== null) {
       objectFromStorage = JSON.parse(keyString);
     }

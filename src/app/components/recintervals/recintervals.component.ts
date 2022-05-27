@@ -19,6 +19,7 @@ export class RecintervalsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // localStorage.removeItem(this.levelStorageKey);
     this.levels = this.levelsService.getAll();
     this.selLevel = this.levels.find(level => level.id === 1);
     this.loadSelLevel();
@@ -30,7 +31,7 @@ export class RecintervalsComponent implements OnInit {
 
   public loadSelLevel() {
     const objectFromStorage = this.storageService.getObjectFromLocalStorage(this.levelStorageKey);
-    if(objectFromStorage.id !== 0) {
+    if(Object.keys(objectFromStorage).length > 0) {
       this.selLevel = this.levels.find(level => level.id === objectFromStorage.id);
     }
   }
