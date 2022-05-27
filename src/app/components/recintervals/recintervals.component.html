@@ -23,7 +23,13 @@
            <form>
               <div class="form-group">
                 <label for="levelSelect" class="form-label mt-4">Niveau sélectionné</label>
-                <select class="form-select" [(ngModel)]="selLevel" name="level-select" id="levelSelect">
+                <select 
+                  class="form-select" 
+                  [(ngModel)]="selLevel" 
+                  name="level-select" 
+                  id="levelSelect" 
+                  (change)="saveSelLevel()"
+                >
                    <option *ngFor="let level of levels" [ngValue]="level">{{ level.description }}</option>
                 </select>
               </div>
