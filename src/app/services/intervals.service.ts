@@ -109,4 +109,8 @@ export class IntervalsService {
   ];
 
   constructor() { }
+
+  public getAll() {
+    return this.intervals;
+  }
 }
