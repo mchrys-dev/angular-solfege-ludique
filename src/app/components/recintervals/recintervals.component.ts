@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IntervalsService } from 'src/app/services/intervals.service';
+import { NotesService } from 'src/app/services/notes.service';
 import { RecintervalslevelsService } from 'src/app/services/recintervalslevels.service';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -12,24 +13,34 @@ export class RecintervalsComponent implements OnInit {
 
   public levels: any[] = [];
   public intervals: any[] = [];
+  public notes: any[] = [];
   public selLevel: any;
   public selResponse: any = {};
   public responseSelectIsDisabled: boolean = true;
   private levelStorageKey: string = 'recintervals_level';
 
+  public randomInterval: any = {};
+  public intervalNotes: any[] = [];
+
   constructor(
     private levelsService: RecintervalslevelsService,
     private storageService: StorageService,
-    private intervalsService: IntervalsService
+    private intervalsService: IntervalsService,
+    private notesService: NotesService
   ) { }
 
   ngOnInit(): void {
     // localStorage.removeItem(this.levelStorageKey);
+    this.notes = this.notesService.getAll();
     this.levels = this.levelsService.getAll();
     this.intervals = this.intervalsService.getAll();
     this.selLevel = this.levels.find(level => level.id === 1);
     this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
     this.loadSelLevel();
+
+    this.generateInterval();
+    console.log(this.randomInterval);
+    console.log(this.intervalNotes);
   }
 
   public saveSelLevel() {
@@ -47,6 +58,22 @@ export class RecintervalsComponent implements OnInit {
     let intervals = [];
     intervals = this.intervals.filter(interval => this.selLevel.intervalIds.includes(interval.id));
     return intervals;
+  }
+
+  public generateInterval() {
+    const intervalIds = this.selLevel.intervalIds;
+    let intervalId = intervalIds[Math.floor(Math.random()*intervalIds.length)];
+
+    this.randomInterval = this.intervals.find(interval => interval.id === intervalId);
+
+    const tonics = this.notesService.getTonics();
+    this.intervalNotes = [];
+    this.intervalNotes.push(tonics[Math.floor(Math.random()*tonics.length)]);
+    this.intervalNotes.push(this.notes.find(note => note.id == this.intervalNotes[0].id + this.randomInterval.size));
+
+    if(this.intervalNotes[1] === undefined) {
+      this.generateInterval();
+    }
   }
 
 }

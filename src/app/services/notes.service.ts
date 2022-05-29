@@ -263,4 +263,12 @@ export class NotesService {
   ];
 
   constructor() { }
+
+  public getAll() {
+    return this.notes;
+  }
+
+  public getTonics() {
+    return this.notes.filter(note => note.isTonic);
+  }
 }
