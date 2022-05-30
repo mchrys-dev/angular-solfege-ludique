@@ -16,12 +16,12 @@
               </div>
               <div class="row mt-2">
                 <div class="col text-center">
-                  <div class="musiqwik">&=r=!</div>
+                  <div class="musiqwik">&={{ intervalNotes[0].musiqwikText }}={{ intervalNotes[1].musiqwikText }}=!</div> 
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col text-center">
-                  Feedback
+                <div class="col text-center {{ feedbackColor }}">
+                  {{ feedbackText }}
                 </div>
               </div>
               <div class="row">
@@ -49,7 +49,14 @@
                 >
                   Nouvelle question
                 </button>
-                <button type="button" class="btn btn-primary col-4" [disabled]="areButtonsDisabled[1]">Corriger</button>
+                <button 
+                  type="button" 
+                  class="btn btn-primary col-4" 
+                  [disabled]="areButtonsDisabled[1]"
+                  (click)="checkAnswer()"
+                >
+                  Corriger
+                </button>
               </div>
             </div>
         </div>
@@ -93,6 +100,5 @@
     </div>
 </div>
 
-{{ selResponse | json }}
 
-{{ randomInterval | json }}
+ 

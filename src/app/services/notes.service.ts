@@ -6,6 +6,12 @@ import { Injectable } from '@angular/core';
 export class NotesService {
 
   private notes = [
+    {
+      id: 0,
+      name: '',
+      musiqwikText: '=',
+      isTonic: false
+    },
     // Première octave
     {
       id: 1,

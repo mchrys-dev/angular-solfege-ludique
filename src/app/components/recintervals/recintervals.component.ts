@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { find } from 'rxjs';
 import { IntervalsService } from 'src/app/services/intervals.service';
 import { NotesService } from 'src/app/services/notes.service';
 import { RecintervalslevelsService } from 'src/app/services/recintervalslevels.service';
@@ -27,6 +28,9 @@ export class RecintervalsComponent implements OnInit {
 
   public responseSelectIsDisabled: boolean = true;
   public areButtonsDisabled = [false, true];
+  public feedbackColor = 'text-dark';
+  public feedbackText = '';
+     
 
   constructor(
     private levelsService: RecintervalslevelsService,
@@ -43,11 +47,17 @@ export class RecintervalsComponent implements OnInit {
     this.intervals = this.intervalsService.getAll();
     this.selLevel = this.levels.find(level => level.id === 1);
     this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
+    this.initIntervalNotes();
     this.loadSelLevel();
   }
 
   public saveSelLevel() {
     this.storageService.saveObject(this.levelStorageKey, this.selLevel);
+
+    this.initIntervalNotes();
+    this.areButtonsDisabled = [false, true];
+    this.responseSelectIsDisabled = true;
+    this.feedbackText = '';
   }
 
   public loadSelLevel() {
@@ -76,14 +86,41 @@ export class RecintervalsComponent implements OnInit {
 
     if(this.intervalNotes[1] === undefined) {
       this.generateInterval();
+      return;
     }
+
+    this.responseSelectIsDisabled = false;
+    this.areButtonsDisabled = [true, false];
+    this.feedbackText = '';
+    this.feedbackColor = 'text-dark';
 
     this.questions.push({
       levelId: this.selLevel.id,
       intervalId: this.randomInterval.id
     });
+  }
 
-    console.log(this.questions);
+  checkAnswer() {
+    if(this.selResponse === this.randomInterval) {
+      this.rightAnswers.push({
+        levelId: this.selLevel.id,
+        intervalId: this.randomInterval.id
+      });
+      this.feedbackColor = 'text-success';
+      this.feedbackText = 'Bonne réponse!';
+    } else {
+      this.feedbackColor = 'text-danger';
+      this.feedbackText = 'Erreur! La bonne réponse était: ' + this.randomInterval.name;
+    }
+    this.responseSelectIsDisabled = true;
+    this.areButtonsDisabled = [false, true];
+  }
+
+  private initIntervalNotes() {
+    this.intervalNotes = [];
+    for(let i=0; i<2; i++) {
+      this.intervalNotes.push(this.notes.find(note => note.id === 0));
+    }
   }
 
 }
