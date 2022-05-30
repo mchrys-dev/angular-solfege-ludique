@@ -3,6 +3,7 @@ import { IntervalsService } from 'src/app/services/intervals.service';
 import { NotesService } from 'src/app/services/notes.service';
 import { RecintervalslevelsService } from 'src/app/services/recintervalslevels.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UtilitiesService } from 'src/app/services/utilities.service';
 
 @Component({
   selector: 'app-recintervals',
@@ -16,17 +17,23 @@ export class RecintervalsComponent implements OnInit {
   public notes: any[] = [];
   public selLevel: any;
   public selResponse: any = {};
-  public responseSelectIsDisabled: boolean = true;
   private levelStorageKey: string = 'recintervals_level';
 
   public randomInterval: any = {};
   public intervalNotes: any[] = [];
 
+  public rightAnswers: any[] = [];
+  public questions: any[] = [];
+
+  public responseSelectIsDisabled: boolean = true;
+  public areButtonsDisabled = [false, true];
+
   constructor(
     private levelsService: RecintervalslevelsService,
     private storageService: StorageService,
     private intervalsService: IntervalsService,
-    private notesService: NotesService
+    private notesService: NotesService,
+    public utilitiesService: UtilitiesService
   ) { }
 
   ngOnInit(): void {
@@ -37,10 +44,6 @@ export class RecintervalsComponent implements OnInit {
     this.selLevel = this.levels.find(level => level.id === 1);
     this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
     this.loadSelLevel();
-
-    this.generateInterval();
-    console.log(this.randomInterval);
-    console.log(this.intervalNotes);
   }
 
   public saveSelLevel() {
@@ -63,10 +66,10 @@ export class RecintervalsComponent implements OnInit {
   public generateInterval() {
     const intervalIds = this.selLevel.intervalIds;
     let intervalId = intervalIds[Math.floor(Math.random()*intervalIds.length)];
-
     this.randomInterval = this.intervals.find(interval => interval.id === intervalId);
 
     const tonics = this.notesService.getTonics();
+
     this.intervalNotes = [];
     this.intervalNotes.push(tonics[Math.floor(Math.random()*tonics.length)]);
     this.intervalNotes.push(this.notes.find(note => note.id == this.intervalNotes[0].id + this.randomInterval.size));
@@ -74,6 +77,13 @@ export class RecintervalsComponent implements OnInit {
     if(this.intervalNotes[1] === undefined) {
       this.generateInterval();
     }
+
+    this.questions.push({
+      levelId: this.selLevel.id,
+      intervalId: this.randomInterval.id
+    });
+
+    console.log(this.questions);
   }
 
 }
