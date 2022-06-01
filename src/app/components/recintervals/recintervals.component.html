@@ -94,11 +94,59 @@
       </h2>
       <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
         <div class="accordion-body">
-           
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Niveau</th>
+                <th scope="col">Score</th>
+                <th scope="col">Pourcentage de réussite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let level of levels">
+                <td>{{ level.description }}</td>
+                <td>{{ getRightAnsByLevel(level.id).length }} / {{ getQuestionsByLevel(level.id).length }}</td>
+                <td>{{ getStatsPercentageByLevel(level.id) }}%</td>
+              </tr>
+              <tr class="fw-bold">
+                <td>Total</td>
+                <td>{{ rightAnswers.length }} / {{ questions.length }}</td>
+                <td>{{ utilitiesService.getPercentage(rightAnswers.length, questions.length) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- Button trigger modal -->
+          <button 
+            type="button" 
+            class="btn btn-danger" 
+            data-bs-toggle="modal" 
+            data-bs-target="#initStatsModal"
+            *ngIf="questions.length > 0"
+          >
+            Réinitialiser les statistiques
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="initStatsModal" tabindex="-1" aria-labelledby="initStatsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="initStatsModalLabel">Réinitialiser les statistiques</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Êtes-vous sûr(e) de vouloir réinitialiser les statistiques?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="initStats()">Oui</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 </div>
-
 
  

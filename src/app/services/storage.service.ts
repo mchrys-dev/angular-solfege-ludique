@@ -19,4 +19,17 @@ export class StorageService {
     }
     return objectFromStorage;
   }
+
+  saveArray(key: string, value: any[]) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  getArrayFromLocalStorage(key: string) {
+    const keyString = localStorage.getItem(key) as string;
+    let arrayFromStorage: any = [];
+    if(keyString !== null) {
+      arrayFromStorage = JSON.parse(keyString);
+    }
+    return arrayFromStorage;
+  }
 }

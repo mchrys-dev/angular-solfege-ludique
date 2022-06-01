@@ -19,6 +19,8 @@ export class RecintervalsComponent implements OnInit {
   public selLevel: any;
   public selResponse: any = {};
   private levelStorageKey: string = 'recintervals_level';
+  private rightAnsStorageKey = 'recintervals_right_ans';
+  private questionsStoragekey = 'recintervals_questions';
 
   public randomInterval: any = {};
   public intervalNotes: any[] = [];
@@ -49,6 +51,10 @@ export class RecintervalsComponent implements OnInit {
     this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
     this.initIntervalNotes();
     this.loadSelLevel();
+    this.rightAnswers = this.storageService.getArrayFromLocalStorage(this.rightAnsStorageKey);
+    this.questions = this.storageService.getArrayFromLocalStorage(this.questionsStoragekey);
+    console.log(this.questions);
+    console.log(this.rightAnswers);
   }
 
   public saveSelLevel() {
@@ -93,11 +99,13 @@ export class RecintervalsComponent implements OnInit {
     this.areButtonsDisabled = [true, false];
     this.feedbackText = '';
     this.feedbackColor = 'text-dark';
+    this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
 
     this.questions.push({
       levelId: this.selLevel.id,
       intervalId: this.randomInterval.id
     });
+    this.storageService.saveArray(this.questionsStoragekey, this.questions);
   }
 
   checkAnswer() {
@@ -106,12 +114,14 @@ export class RecintervalsComponent implements OnInit {
         levelId: this.selLevel.id,
         intervalId: this.randomInterval.id
       });
+      this.storageService.saveArray(this.rightAnsStorageKey, this.rightAnswers);
       this.feedbackColor = 'text-success';
       this.feedbackText = 'Bonne réponse!';
     } else {
       this.feedbackColor = 'text-danger';
       this.feedbackText = 'Erreur! La bonne réponse était: ' + this.randomInterval.name;
     }
+
     this.responseSelectIsDisabled = true;
     this.areButtonsDisabled = [false, true];
   }
@@ -123,4 +133,23 @@ export class RecintervalsComponent implements OnInit {
     }
   }
 
+  public getRightAnsByLevel(levelId: number) {
+    return this.rightAnswers.filter(answer => answer.levelId === levelId);
+  }
+
+  public getQuestionsByLevel(levelId: number) {
+    return this.questions.filter(question => question.levelId === levelId);
+  }
+
+  public getStatsPercentageByLevel(levelId: number) {
+    return this.utilitiesService.getPercentage(this.getRightAnsByLevel(levelId).length, this.getQuestionsByLevel(levelId).length);
+  }
+
+  public initStats() {
+    this.rightAnswers = [];
+    this.questions = [];
+
+    this.storageService.saveArray(this.rightAnsStorageKey, this.rightAnswers);
+    this.storageService.saveArray(this.questionsStoragekey, this.questions);
+  }
 }
