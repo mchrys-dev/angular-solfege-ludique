@@ -68,7 +68,7 @@ export class IntervalsService {
     },
     {
       id: 13,
-      name: 'quinte diminuée',
+      name: 'quinte augmentée',
       size: 20
     },
     {

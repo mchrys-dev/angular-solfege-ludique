@@ -106,12 +106,38 @@
               <tr *ngFor="let level of levels">
                 <td>{{ level.description }}</td>
                 <td>{{ getRightAnsByLevel(level.id).length }} / {{ getQuestionsByLevel(level.id).length }}</td>
-                <td>{{ getStatsPercentageByLevel(level.id) }}%</td>
+                <td>
+                  <div class="progress">
+                    <div 
+                      class="progress-bar bg-{{ getProgressbarColorClass(level.id) }}" 
+                      role="progressbar" 
+                      [ngStyle]="{width: getStatsPercentageByLevel(level.id) + '%'}" 
+                      attr.aria-valuenow="{{ getStatsPercentageByLevel(level.id) }}" 
+                      aria-valuemin="0" 
+                      aria-valuemax="100"
+                    >
+                      {{ getStatsPercentageByLevel(level.id) }}%
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr class="fw-bold">
                 <td>Total</td>
                 <td>{{ rightAnswers.length }} / {{ questions.length }}</td>
-                <td>{{ utilitiesService.getPercentage(rightAnswers.length, questions.length) }}%</td>
+                <td>
+                  <div class="progress">
+                    <div 
+                      class="progress-bar bg-{{ getProgressbarColorClass(-1) }}" 
+                      role="progressbar" 
+                      [ngStyle]="{width: utilitiesService.getPercentage(rightAnswers.length, questions.length) + '%'}" 
+                      attr.aria-valuenow="{{ utilitiesService.getPercentage(rightAnswers.length, questions.length) }}" 
+                      aria-valuemin="0" 
+                      aria-valuemax="100"
+                    >
+                      {{ utilitiesService.getPercentage(rightAnswers.length, questions.length) }}%
+                    </div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>

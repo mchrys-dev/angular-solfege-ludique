@@ -53,8 +53,7 @@ export class RecintervalsComponent implements OnInit {
     this.loadSelLevel();
     this.rightAnswers = this.storageService.getArrayFromLocalStorage(this.rightAnsStorageKey);
     this.questions = this.storageService.getArrayFromLocalStorage(this.questionsStoragekey);
-    console.log(this.questions);
-    console.log(this.rightAnswers);
+    console.log(this.levels);
   }
 
   public saveSelLevel() {
@@ -151,5 +150,28 @@ export class RecintervalsComponent implements OnInit {
 
     this.storageService.saveArray(this.rightAnsStorageKey, this.rightAnswers);
     this.storageService.saveArray(this.questionsStoragekey, this.questions);
+  }
+
+  public getProgressbarWidth(levelId: number) {
+    return 'width: ' + this.getStatsPercentageByLevel(levelId) + '%';
+  }
+
+  public getProgressbarColorClass(levelId: number) {
+    let className = '';
+    let testingVar = null;
+    levelId === -1 ? testingVar = this.utilitiesService.getPercentage(this.rightAnswers.length, this.questions.length) : testingVar = this.getStatsPercentageByLevel(levelId);
+
+    switch(true) {
+      case (testingVar < 20):
+        className = 'danger';
+        break;
+      case (testingVar >= 20 &&  testingVar < 70):
+        className = 'warning';
+        break;
+      case (testingVar >= 70):
+        className = 'success';
+        break;
+    }
+    return className;
   }
 }
