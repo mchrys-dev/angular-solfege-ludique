@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilitiesService {
 
-  constructor() { }
+  constructor(
+    private storageService: StorageService
+  ) { }
 
   public getPercentage(num1: number, num2: number) {
     let percentage: number;
