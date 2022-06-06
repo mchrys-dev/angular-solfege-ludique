@@ -14,7 +14,7 @@ import { UtilitiesService } from 'src/app/services/utilities.service';
 export class RecintervalsComponent implements OnInit {
 
   public levels: any[] = [];
-  public intervals: any[] = [];
+  public elements: any[] = [];
   public notes: any[] = [];
   public selLevel: any;
   public selResponse: any = {};
@@ -22,8 +22,8 @@ export class RecintervalsComponent implements OnInit {
   public rightAnsStorageKey = 'recintervals_right_ans';
   public questionsStorageKey = 'recintervals_questions';
 
-  public randomInterval: any = {};
-  public intervalNotes: any[] = [];
+  public randomElement: any = {};
+  public elementNotes: any[] = [];
 
   public rightAnswers: any[] = [];
   public questions: any[] = [];
@@ -46,10 +46,10 @@ export class RecintervalsComponent implements OnInit {
     // localStorage.removeItem(this.levelStorageKey);
     this.notes = this.notesService.getAll();
     this.levels = this.levelsService.getAll();
-    this.intervals = this.intervalsService.getAll();
+    this.elements = this.intervalsService.getAll();
     this.selLevel = this.levels.find(level => level.id === 1);
-    this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
-    this.initIntervalNotes();
+    this.selResponse = this.elements.find(element => element.id === this.selLevel.intervalIds[0]);
+    this.initElementNotes();
     this.loadSelLevel();
     this.rightAnswers = this.storageService.getArrayFromLocalStorage(this.rightAnsStorageKey);
     this.questions = this.storageService.getArrayFromLocalStorage(this.questionsStorageKey);
@@ -59,7 +59,7 @@ export class RecintervalsComponent implements OnInit {
   public saveSelLevel() {
     this.storageService.saveObject(this.levelStorageKey, this.selLevel);
 
-    this.initIntervalNotes();
+    this.initElementNotes();
     this.areButtonsDisabled = [false, true];
     this.responseSelectIsDisabled = true;
     this.feedbackText = '';
@@ -73,24 +73,24 @@ export class RecintervalsComponent implements OnInit {
   }
 
   public getSelLevelsIntervals() {
-    let intervals = [];
-    intervals = this.intervals.filter(interval => this.selLevel.intervalIds.includes(interval.id));
-    return intervals;
+    let elements = [];
+    elements = this.elements.filter(element => this.selLevel.intervalIds.includes(element.id));
+    return elements;
   }
 
-  public generateInterval() {
+  public generateQuestion() {
     const intervalIds = this.selLevel.intervalIds;
     let intervalId = intervalIds[Math.floor(Math.random()*intervalIds.length)];
-    this.randomInterval = this.intervals.find(interval => interval.id === intervalId);
+    this.randomElement = this.elements.find(element => element.id === intervalId);
 
     const tonics = this.notesService.getTonics();
 
-    this.intervalNotes = [];
-    this.intervalNotes.push(tonics[Math.floor(Math.random()*tonics.length)]);
-    this.intervalNotes.push(this.notes.find(note => note.id == this.intervalNotes[0].id + this.randomInterval.size));
+    this.elementNotes = [];
+    this.elementNotes.push(tonics[Math.floor(Math.random()*tonics.length)]);
+    this.elementNotes.push(this.notes.find(note => note.id == this.elementNotes[0].id + this.randomElement.size));
 
-    if(this.intervalNotes[1] === undefined) {
-      this.generateInterval();
+    if(this.elementNotes[1] === undefined) {
+      this.generateQuestion();
       return;
     }
 
@@ -98,37 +98,37 @@ export class RecintervalsComponent implements OnInit {
     this.areButtonsDisabled = [true, false];
     this.feedbackText = '';
     this.feedbackColor = 'text-dark';
-    this.selResponse = this.intervals.find(interval => interval.id === this.selLevel.intervalIds[0]);
+    this.selResponse = this.elements.find(element => element.id === this.selLevel.intervalIds[0]);
 
     this.questions.push({
       levelId: this.selLevel.id,
-      intervalId: this.randomInterval.id
+      intervalId: this.randomElement.id
     });
     this.storageService.saveArray(this.questionsStorageKey, this.questions);
   }
 
   checkAnswer() {
-    if(this.selResponse === this.randomInterval) {
+    if(this.selResponse === this.randomElement) {
       this.rightAnswers.push({
         levelId: this.selLevel.id,
-        intervalId: this.randomInterval.id
+        intervalId: this.randomElement.id
       });
       this.storageService.saveArray(this.rightAnsStorageKey, this.rightAnswers);
       this.feedbackColor = 'text-success';
       this.feedbackText = 'Bonne réponse!';
     } else {
       this.feedbackColor = 'text-danger';
-      this.feedbackText = 'Erreur! La bonne réponse était: ' + this.randomInterval.name;
+      this.feedbackText = 'Erreur! La bonne réponse était: ' + this.randomElement.name;
     }
 
     this.responseSelectIsDisabled = true;
     this.areButtonsDisabled = [false, true];
   }
 
-  private initIntervalNotes() {
-    this.intervalNotes = [];
+  private initElementNotes() {
+    this.elementNotes = [];
     for(let i=0; i<2; i++) {
-      this.intervalNotes.push(this.notes.find(note => note.id === 0));
+      this.elementNotes.push(this.notes.find(note => note.id === 0));
     }
   }
 
