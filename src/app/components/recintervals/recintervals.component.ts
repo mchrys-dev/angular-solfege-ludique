@@ -53,7 +53,6 @@ export class RecintervalsComponent implements OnInit {
     this.loadSelLevel();
     this.rightAnswers = this.storageService.getArrayFromLocalStorage(this.rightAnsStorageKey);
     this.questions = this.storageService.getArrayFromLocalStorage(this.questionsStorageKey);
-    console.log(this.levels);
   }
 
   public saveSelLevel() {
