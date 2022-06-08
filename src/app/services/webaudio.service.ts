@@ -47,14 +47,14 @@ export class WebaudioService {
   Cb6: any = null;
   Bsharp5: any = null;
 
-  sounds: any[] = [];
+  sounds: any[] = [
+    'C4', 'Csharp4', 'Db4', 'D4', 'Dsharp4', 'Eb4', 'E4', 'Fb4', 'Esharp4', 'F4', 'Fsharp4', 'Gb4', 'G4', 'Gsharp4', 'Ab4', 'A4', 'Asharp4', 'Bb4', 'B4', 'Cb5', 'Bsharp4',
+    'C5', 'Csharp5', 'Db5', 'D5', 'Dsharp5', 'Eb5', 'E5', 'Fb5', 'Esharp5', 'F5', 'Fsharp5', 'Gb5', 'G5', 'Gsharp5', 'Ab5', 'A5', 'Asharp5', 'Bb5', 'B5', 'Cb5', 'Bsharp5'
+  ];
   buffer: any = null;
   audioCtx = new AudioContext();
 
-  sources: any[] = [
-    'C4', 'Csharp4', 'Db4', 'D4', 'Dsharp4', 'Eb4', 'E4', 'Fb4', 'Esharp4', 'F', 'Fsharp4', 'Gb4', 'G4', 'Gsharp4', 'Ab4', 'A4', 'Asharp4', 'Bb4', 'B4', 'Cb5', 'Bsharp4',
-    'C5', 'Csharp5', 'Db5', 'D5', 'Dsharp5', 'Eb5', 'E5', 'Fb5', 'Esharp5', 'F', 'Fsharp5', 'Gb5', 'G5', 'Gsharp5', 'Ab5', 'A5', 'Asharp5', 'Bb5', 'B5', 'Cb5', 'Bsharp5'
-  ];
+  sources: any[] = [];
 
   constructor() { 
     this.sounds.forEach(function(this: any, soundName: any) {
@@ -85,7 +85,6 @@ export class WebaudioService {
     source.buffer = buffer;
 
     this.sources.push(source);
-    console.log(this.sources);
 
     source.connect(this.audioCtx.destination);
     source.start(this.audioCtx.currentTime + time);

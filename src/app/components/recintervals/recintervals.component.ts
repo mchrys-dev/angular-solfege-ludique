@@ -5,6 +5,7 @@ import { NotesService } from 'src/app/services/notes.service';
 import { RecintervalslevelsService } from 'src/app/services/recintervalslevels.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UtilitiesService } from 'src/app/services/utilities.service';
+import { WebaudioService } from 'src/app/services/webaudio.service';
 
 @Component({
   selector: 'app-recintervals',
@@ -29,7 +30,7 @@ export class RecintervalsComponent implements OnInit {
   public questions: any[] = [];
 
   public responseSelectIsDisabled: boolean = true;
-  public areButtonsDisabled = [false, true];
+  public areButtonsDisabled = [false, true, true];
   public feedbackColor = 'text-dark';
   public feedbackText = '';
      
@@ -39,6 +40,7 @@ export class RecintervalsComponent implements OnInit {
     private storageService: StorageService,
     private intervalsService: IntervalsService,
     private notesService: NotesService,
+    private webAudioService: WebaudioService,
     public utilitiesService: UtilitiesService
   ) { }
 
@@ -59,7 +61,7 @@ export class RecintervalsComponent implements OnInit {
     this.storageService.saveObject(this.levelStorageKey, this.selLevel);
 
     this.initElementNotes();
-    this.areButtonsDisabled = [false, true];
+    this.areButtonsDisabled = [false, true, true];
     this.responseSelectIsDisabled = true;
     this.feedbackText = '';
   }
@@ -94,7 +96,7 @@ export class RecintervalsComponent implements OnInit {
     }
 
     this.responseSelectIsDisabled = false;
-    this.areButtonsDisabled = [true, false];
+    this.areButtonsDisabled = [true, false, false];
     this.feedbackText = '';
     this.feedbackColor = 'text-dark';
     this.selResponse = this.elements.find(element => element.id === this.selLevel.intervalIds[0]);
@@ -121,7 +123,7 @@ export class RecintervalsComponent implements OnInit {
     }
 
     this.responseSelectIsDisabled = true;
-    this.areButtonsDisabled = [false, true];
+    this.areButtonsDisabled = [false, true, true];
   }
 
   private initElementNotes() {
@@ -137,5 +139,15 @@ export class RecintervalsComponent implements OnInit {
 
     this.storageService.saveArray(this.rightAnsStorageKey, this.rightAnswers);
     this.storageService.saveArray(this.questionsStorageKey, this.questions);
+  }
+
+  public playElement() {
+    // On arrête toutes les sources actives
+    this.webAudioService.stopAll();
+    // On réinitialise l'array de sources
+    this.webAudioService.sources = [];
+    this.elementNotes.forEach(function(this: any, note: any, index: number){
+      this.webAudioService.play(this.webAudioService[note.sound], 1.5*index);
+    }.bind(this));
   }
 }
